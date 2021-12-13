@@ -1,0 +1,334 @@
+﻿@using NKSLK.Entites
+@model List<CONGVIEC>
+@{
+    ViewBag.Title = "Công việc";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form method="post" action="/CongViec" class="d-flex mt-5 flex-column">
+    <div class="card w-100">
+        <div class="card-header">
+            Tìm kiếm
+        </div>
+        <div class="card-body d-flex ">
+            <div class="d-flex col-10 row g-3 m-0">
+                <div class="col-5">
+                    <label class="form-label" for="maCN">Lựa chọn</label>
+                    <select class="form-select" name="luachon" id="luachon">
+                        <option value=""></option>
+                        <option value="1">Có nhiều NKSLK nhất</option>
+                        <option value="2">Đơn giá cao nhất</option>
+                        <option value="3">Đơn giá nhỏ nhất</option>
+                        <option value="4">Đơn giá lớn hơn đơn giá trung bình</option>
+                        <option value="5">Đơn giá nhỏ hơn đơn giá trung bình</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-2 justify-content-center">
+                <button class="btn btn-secondary d-flex">
+                    <div>Tìm kiếm</div>
+                    <span class="material-icons align-self-center ms-2">
+                        search
+                    </span>
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="d-flex">
+        <button class="btn btn-primary d-flex mb-4 mt-3" onclick="return false" data-bs-toggle="modal" data-bs-target="#create">
+            <div>Thêm công việc</div>
+            <span class="material-icons align-self-center ms-2">
+                add_circle_outline
+            </span>
+        </button>
+    </div>
+
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Mã công việc</th>
+                <th scope="col">Tên công việc</th>
+                <th scope="col">Định mức khoán</th>
+                <th scope="col">Đơn vị khoán</th>
+                <th scope="col">Hệ số khoán</th>
+                <th scope="col">Định mức lao động</th>
+                <th scope="col">Đơn giá</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int i = 0;
+                foreach (var item in Model)
+                {
+                    i++;
+
+                    <tr id=@item.MaCV class="user-select-none">
+                        <td>@i</td>
+                        <td>@item.MaCV</td>
+                        <td>@item.TenCV</td>
+                        <td>@item.DinhMucKhoan</td>
+                        <td>@item.DonViKhoan</td>
+                        <td>@item.HeSoKhoan</td>
+                        <td>@item.DinhMucLaoDong</td>
+                        <td>@item.DonGia</td>
+                        <td>
+                            <div class="d-flex justify-content-around">
+                                <button class="btn p-0 d-flex" onclick="return false" id="btn-edit" data-bs-toggle="modal" data-bs-target="#edit">
+                                    <span class="material-icons align-self-center text-success">
+                                        edit
+                                    </span>
+                                </button>
+                                <button class="btn p-0 d-flex" onclick="return false" id="btn-delete" data-bs-toggle="modal" data-bs-target="#delete">
+                                    <span class="material-icons align-self-center text-danger">
+                                        delete
+                                    </span>
+                                </button>
+                            </div>
+
+                        </td>
+                    </tr>
+
+                }
+            }
+        </tbody>
+    </table>
+
+    <nav aria-label="Page navigation example" class="d-flex justify-content-center">
+        <ul class="pagination">
+            @if (ViewBag.CurrentPage == 1)
+            {
+                <li class="page-item">
+                    <button class="page-link disabled" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </button>
+                </li>
+            }
+            else
+            {
+                <li class="page-item">
+                    <button class="page-link" formaction="/CongViec/Index/?Page=@(ViewBag.CurrentPage-1)" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </button>
+                </li>
+            }
+
+            @{
+                int lenght = ViewBag.PageNumber;
+                for (int j = 1; j <= lenght; j++)
+                {
+                    if (ViewBag.CurrentPage == j)
+                    {
+                        <li class="page-item active"><button class="page-link" formaction="/CongViec/Index/?Page=@j">@j</button></li>
+                    }
+                    else
+                    {
+                        <li class="page-item"><button class="page-link" formaction="/CongViec/Index/?Page=@j">@j</button></li>
+                    }
+                }
+            }
+            @if (ViewBag.CurrentPage == ViewBag.PageNumber)
+            {
+                <li class="page-item">
+                    <button class="page-link disabled" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </button>
+                </li>
+            }
+            else
+            {
+                <li class="page-item">
+                    <button class="page-link" formaction="/CongViec/Index/?Page=@(ViewBag.CurrentPage+1)" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </button>
+                </li>
+            }
+
+        </ul>
+    </nav>
+
+</form>
+
+
+<div class="modal fade" id="delete" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Xóa công công việc</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <label class="form-label" for="macv">Mã công việc</label>
+                    <input class="form-control" disabled id="macv" value="" />
+                </div>
+                <div>
+                    <label class="form-label" for="tencv">Tên công việc</label>
+                    <input class="form-control" disabled id="tencv" value="" />
+                </div>
+                <div>
+                    <label class="form-label" for="dinhmuckhoan">Định mức khoán</label>
+                    <input class="form-control" disabled id="dinhmuckhoan" value="" />
+                </div>
+                <div>
+                    <label class="form-label" for="donvikhoan">Đơn vị khoán</label>
+                    <input class="form-control" disabled id="donvikhoan" value="" />
+                </div>
+                <div>
+                    <label class="form-label" for="hesokhoan">Hệ số khoán</label>
+                    <input class="form-control" disabled id="hesokhoan" value="" />
+                </div>
+                <div>
+                    <label class="form-label" for="dinhmuclaodong">Định mức lao động</label>
+                    <input class="form-control" disabled id="dinhmuclaodong" value="" />
+                </div>
+                <div>
+                    <label class="form-label" for="dongia">Đơn giá</label>
+                    <input class="form-control" disabled id="dongia" value="" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <form method="post">
+                    <button class="btn btn-primary" formaction="" id="delete-confirm">Xóa</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<form method="post">
+    <div class="modal fade" id="create" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Thêm công việc</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <label class="form-label" for="tencv">Tên công việc</label>
+                        <input class="form-control" name="tencv" id="tencv" value="" />
+                    </div>
+                    <div>
+                        <label class="form-label" for="dinhmuckhoan">Định mức khoán</label>
+                        <input class="form-control" name="dinhmuckhoan" id="dinhmuckhoan" value="" />
+                    </div>
+                    <div>
+                        <label class="form-label" for="donvikhoan">Đơn vị khoán</label>
+                        <input class="form-control" name="donvikhoan" id="donvikhoan" value="" />
+                    </div>
+                    <div>
+                        <label class="form-label" for="hesokhoan">Hệ số khoán</label>
+                        <input class="form-control" name="hesokhoan" id="hesokhoan" value="" />
+                    </div>
+                    <div>
+                        <label class="form-label" for="dinhmuclaodong">Định mức lao động</label>
+                        <input class="form-control" name="dinhmuclaodong" id="dinhmuclaodong" value="" />
+                    </div>
+                    <div>
+                        <label class="form-label" for="dongia">Đơn giá</label>
+                        <input class="form-control" name="dongia" id="dongia" value="" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button class="btn btn-primary" formaction="/CongViec/Create">Thêm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<form method="post">
+    <div class="modal fade" id="edit" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">sửa công việc</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <label class="form-label" for="macv">Mã công việc</label>
+                        <input class="form-control" disabled name="macv" id="macv" value="" />
+                    </div>
+                    <div>
+                        <label class="form-label" for="tencv">Tên công việc</label>
+                        <input class="form-control" name="tencv" id="tencv" value="" />
+                    </div>
+                    <div>
+                        <label class="form-label" for="dinhmuckhoan">Định mức khoán</label>
+                        <input class="form-control" name="dinhmuckhoan" id="dinhmuckhoan" value="" />
+                    </div>
+                    <div>
+                        <label class="form-label" for="donvikhoan">Đơn vị khoán</label>
+                        <input class="form-control" name="donvikhoan" id="donvikhoan" value="" />
+                    </div>
+                    <div>
+                        <label class="form-label" for="hesokhoan">Hệ số khoán</label>
+                        <input class="form-control" name="hesokhoan" id="hesokhoan" value="" />
+                    </div>
+                    <div>
+                        <label class="form-label" for="dinhmuclaodong">Định mức lao động</label>
+                        <input class="form-control" name="dinhmuclaodong" id="dinhmuclaodong" value="" />
+                    </div>
+                    <div>
+                        <label class="form-label" for="dongia">Đơn giá</label>
+                        <input class="form-control" name="dongia" id="dongia" value="" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button class="btn btn-primary" id="edit-confirm" formaction="/CongViec/Edit">Sửa</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+
+            $("button#btn-delete").click(function () {
+                var td_list = $(this).parent().parent().parent().children("td")
+                var input_list = $("div#delete input")
+                var lenght = td_list.length
+                for (var i = 1; i < lenght - 1; i++) {
+                    if ($(input_list[i - 1]).attr("type") == "date") {
+                        const str = $(td_list[i]).text().split("/")
+                        $(input_list[i - 1]).val(str[2] + "-" + str[1] + "-" + str[0])
+                    }
+                    else
+                        $(input_list[i - 1]).val($(td_list[i]).text())
+                }
+
+                $("button#delete-confirm").attr("formaction", "/CongViec/Delete/" + $(input_list[0]).val())
+            })
+
+            $("button#btn-edit").click(function () {
+                var td_list = $(this).parent().parent().parent().children("td")
+                var input_list = $("div#edit input")
+                var lenght = td_list.length
+                for (var i = 1; i < lenght - 1; i++) {
+                    $(input_list[i - 1]).val($(td_list[i]).text())
+                }
+            
+                $("button#edit-confirm").attr("formaction", "/CongViec/Edit/" + $(input_list[0]).val())
+            })
+
+            $("#luachon").val(@ViewBag.LuaChon)
+        })
+    </script>
+
+}
+
+

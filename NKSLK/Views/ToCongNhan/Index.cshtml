@@ -1,0 +1,240 @@
+﻿@using NKSLK.Entites
+@model List<TOCONGNHAN>
+@{
+    ViewBag.Title = "Tổ công nhân";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form method="post" action="/ToCongNhan" class="d-flex mt-5 flex-column">
+    <div class="card w-100 mb-3">
+        <div class="card-header">
+            Tìm kiếm
+        </div>
+        <div class="card-body d-flex ">
+            <div class="d-flex col-10 row g-3 m-0">
+                <div class="col-2">
+                    <label class="form-label" for="maTo">Mã tổ</label>
+                    <input class="form-control" name="maTo" id="maTo" value="@ViewBag.MaTo" />
+                </div>
+                <input class="visually-hidden" type="date" name="ngaytao" id="ngaytao" value="" />
+            </div>
+            <div class="col-2 justify-content-center">
+                <button class="btn btn-secondary d-flex">
+                    <div>Tìm kiếm</div>
+                    <span class="material-icons align-self-center ms-2">
+                        search
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <button class="btn btn-primary d-flex mb-4 mt-3 ms-4" id="create" formaction="/ToCongNhan/Create">
+            <div>Thêm tổ</div>
+            <span class="material-icons align-self-center ms-2">
+                add_circle_outline
+            </span>
+        </button>
+    </div>
+
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Mã tổ</th>
+                <th scope="col">Ngày tạo</th>
+                <th scope="col">Số lượng công nhân</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int i = 0;
+                foreach (var item in Model)
+                {
+                    i++;
+                    var date = "";
+                    if (item.NgayTao.HasValue)
+                    {
+                        var year = item.NgayTao.Value.Year;
+                        var month = item.NgayTao.Value.Month;
+                        var day = item.NgayTao.Value.Day;
+                        var _month = month.ToString();
+                        var _day = day.ToString();
+                        if (month < 10)
+                        {
+                            _month = "0" + _month;
+                        }
+                        if (day < 10)
+                        {
+                            _day = "0" + _day;
+                        }
+                        date = _day + "/" + _month + "/" + year;
+                    }
+
+                    <tr id="@item.MaTo" class="user-select-none">
+                        <td>@i</td>
+                        <td>@item.MaTo</td>
+                        <td>@date</td>
+                        <td>@item.SoLuong</td>
+                        <td>
+                            <div class="d-flex justify-content-around">
+                                <a class="btn text-success p-0 d-flex" id="edit" href="/ToCongNhan/Edit/@item.MaTo">
+                                    <span class="material-icons align-self-center">
+                                        edit
+                                    </span>
+                                </a>
+                                <button class="btn p-0 d-flex" onclick="return false" id="btn-delete" data-bs-toggle="modal" data-bs-target="#delete">
+                                    <span class="material-icons align-self-center text-danger">
+                                        delete
+                                    </span>
+                                </button>
+                            </div>
+
+                        </td>
+                    </tr>
+
+                }
+            }
+        </tbody>
+    </table>
+
+
+    <nav aria-label="Page navigation example" class="d-flex justify-content-center">
+        <ul class="pagination">
+            @if (ViewBag.CurrentPage == 1)
+            {
+                <li class="page-item">
+                    <a class="page-link disabled" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+            }
+            else
+            {
+                <li class="page-item">
+                    <button class="page-link" formaction="/ToCongNhan/Index/?Page=@(ViewBag.CurrentPage-1)" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </button>
+                </li>
+            }
+
+            @{
+                int lenght = ViewBag.PageNumber;
+                for (int j = 1; j <= lenght; j++)
+                {
+                    if (ViewBag.CurrentPage == j)
+                    {
+                        <li class="page-item active"><button class="page-link" formaction="/ToCongNhan/Index/?Page=@j">@j</button></li>
+                    }
+                    else
+                    {
+                        <li class="page-item"><button class="page-link" formaction="/ToCongNhan/Index/?Page=@j">@j</button></li>
+                    }
+                }
+            }
+            @if (ViewBag.CurrentPage == ViewBag.PageNumber)
+            {
+                <li class="page-item">
+                    <a class="page-link disabled" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            }
+            else
+            {
+                <li class="page-item">
+                    <button class="page-link" formaction="/ToCongNhan/Index/?Page=@(ViewBag.CurrentPage+1)" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </button>
+                </li>
+            }
+
+        </ul>
+    </nav>
+</form>
+
+
+
+<div class="modal fade" id="delete" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Xóa tổ công nhân</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <label class="form-label" for="mato">Mã tổ</label>
+                    <input class="form-control" disabled id="mato" value="" />
+                </div>
+                <div>
+                    <label class="form-label" for="ngaytao">Ngày tạo</label>
+                    <input class="form-control" disabled type="date" id="ngaytao" value="" />
+                </div>
+                <div>
+                    <label class="form-label" for="soluong">Số lượng công nhân</label>
+                    <input class="form-control" disabled id="soluong" value="" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <form method="post">
+                    <button class="btn btn-primary" formaction="" id="delete-confirm">Xóa</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $("#edit").click(function () {
+
+            })
+            $("tbody tr").mouseenter(function () {
+                $(this).addClass("bg-dark bg-opacity-25")
+            })
+            $("tbody tr").mouseleave(function () {
+                $("tbody tr").removeClass("bg-dark bg-opacity-25")
+            })
+            $("tbody tr").dblclick(function () {
+                window.location.href = "/ToCongNhan/Edit/" + $(this).attr("id")
+            })
+
+            $("button#btn-delete").click(function () {
+                var td_list = $(this).parent().parent().parent().children("td")
+                var input_list = $("div#delete input")
+                var lenght = td_list.length
+                for (var i = 1; i < lenght - 1; i++) {
+                    if ($(input_list[i - 1]).attr("type") == "date") {
+                        const str = $(td_list[i]).text().split("/")
+                        $(input_list[i - 1]).val(str[2] + "-" + str[1] + "-" + str[0])
+                    }
+                    else
+                        $(input_list[i - 1]).val($(td_list[i]).text())
+                }
+
+                $("button#delete-confirm").attr("formaction", "/ToCongNhan/Delete/" + $(input_list[0]).val())
+            })
+
+            $("button#create").click(function () {
+                var date = new Date()
+                var str_date = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()
+                $("input#ngaytao").val(str_date)
+            })
+
+        })
+    </script>
+
+}
+
+

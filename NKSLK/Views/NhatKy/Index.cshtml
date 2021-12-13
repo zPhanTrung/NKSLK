@@ -1,0 +1,246 @@
+﻿@using NKSLK.Models
+@using NKSLK.Entites
+@model List<NKSLK_View>
+@{
+    ViewBag.Title = "Nhật ký";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3>Nhật ký sản lượng khoán</h3>
+
+<form method="post" class="d-flex mt-4 flex-column">
+    <div class="card w-100 mb-3">
+        <div class="card-header">
+            Tìm kiếm
+        </div>
+        <div class="card-body d-flex ">
+            <div class="d-flex col-10 row g-3 m-0">
+                <div class="col-2">
+                    <label class="form-label" for="macn">Mã công nhân</label>
+                    <input class="form-control" name="macn-search" value="@ViewBag.MaCN" />
+                </div>
+                <div class="col-2">
+                    <label class="form-label" for="hoten">Họ tên</label>
+                    <input class="form-control" name="hoten-search" value="@ViewBag.HoTen" />
+                </div>
+                <div class="col-2">
+                    <label class="form-label" for="mato">Mã tổ</label>
+                    <input class="form-control" name="mato-search" value="@ViewBag.MaTo" />
+                </div>
+                <div class="col-3">
+                    <label class="form-label" for="ngaythuchien">Ngày thực hiện</label>
+                    <input class="form-control" type="date" name="ngaybatdau-search" value="@ViewBag.NgayBatDau" />
+                    <input class="form-control" type="date" name="ngayketthuc-search" value="@ViewBag.NgayKetthuc" />
+                </div>
+                <div class="col-2">
+                    <label class="form-label" for="maca">Ca làm việc</label>
+                    <select class="form-select" name="maca-search" id="maca">
+                        @{
+                            <option value=""></option>
+                            var calamviec = (List<CALAMVIEC>)ViewBag.CaLamViec;
+                            var length = calamviec.Count;
+                            for (int k = 0; k < length; k++)
+                            {
+                                <option value="@calamviec[k].MaCa">@calamviec[k].TenCa</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="col-2 justify-content-center">
+                <button class="btn btn-secondary d-flex" formaction="/NhatKy">
+                    <div>Tìm kiếm</div>
+                    <span class="material-icons align-self-center ms-2">
+                        search
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="card w-100 mb-3">
+        <div class="card-header">
+            Điểm danh
+        </div>
+        <div class="card-body d-flex ">
+            <div class="d-flex col-10 row g-3 m-0" id="congnhan-add">
+                <div class="col-2">
+                    <label class="form-label" for="mato">Mã tổ</label>
+                    <input class="form-control" name="mato-diemdanh" id="mato" value="" />
+                </div>
+                <div class="col-3">
+                    <label class="form-label" for="ngaythuchien">Ngày thực hiện</label>
+                    <input class="form-control" type="date" name="ngaythuchien-diemdanh" id="ngaythuchien" value="" />
+                </div>
+            </div>
+            <div class="col-2 justify-content-center">
+                <button class="btn btn-secondary d-flex" formaction="/NhatKy/HienThiDiemDanh">
+                    <div>Hiển thị</div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Mã tổ</th>
+                <th scope="col">Mã công nhân</th>
+                <th scope="col">Họ tên</th>
+                <th scope="col">Ngày sinh</th>
+                <th scope="col">Giới tính</th>
+                <th scope="col">Ngày thực hiện</th>
+                <th scope="col">Giờ bắt đầu</th>
+                <th scope="col">Giờ kết thúc</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int i = 0;
+                foreach (var item in Model)
+                {
+                    i++;
+                    var date = "";
+                    var ngaythuchien = "";
+                    int year;
+                    int month;
+                    int day;
+                    string _month;
+                    string _day;
+                    if (item.NgaySinh.HasValue)
+                    {
+                        year = item.NgaySinh.Value.Year;
+                        month = item.NgaySinh.Value.Month;
+                        day = item.NgaySinh.Value.Day;
+                        _month = month.ToString();
+                        _day = day.ToString();
+                        if (month < 10)
+                        {
+                            _month = "0" + _month;
+                        }
+                        if (day < 10)
+                        {
+                            _day = "0" + _day;
+                        }
+                        date = _day + "/" + _month + "/" + year;
+                    }
+                    if (item.NgayThucHien.HasValue)
+                    {
+                        year = item.NgayThucHien.Value.Year;
+                        month = item.NgayThucHien.Value.Month;
+                        day = item.NgayThucHien.Value.Day;
+                        _month = month.ToString();
+                        _day = day.ToString();
+                        if (month < 10)
+                        {
+                            _month = "0" + _month;
+                        }
+                        if (day < 10)
+                        {
+                            _day = "0" + _day;
+                        }
+                        ngaythuchien = _day + "/" + _month + "/" + year;
+                    }
+
+                    <tr id=@item.MaCN class="user-select-none">
+                        <td>@i</td>
+                        <td>@item.MaTo</td>
+                        <td>@item.MaCN</td>
+                        <td>@item.HoTen</td>
+                        <td>@date</td>
+                        @{
+                            if (item.GioiTinh == true)
+                            {
+                                <td>Nam</td>
+                            }
+                            else
+                            {
+                                <td>Nữ</td>
+                            }
+                        }
+
+                        <td>@ngaythuchien</td>
+                        <td>@item.GioBatDau</td>
+                        <td>@item.GioKetThuc</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+
+    <nav aria-label="Page navigation example" class="d-flex justify-content-center">
+        <ul class="pagination">
+            @if (ViewBag.CurrentPage == 1)
+            {
+                <li class="page-item">
+                    <a class="page-link disabled" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+            }
+            else
+            {
+                <li class="page-item">
+                    <button class="page-link" href="/NhatKy/Index/?Page=@(ViewBag.CurrentPage-1)" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </button>
+                </li>
+            }
+
+            @{
+                int lenght = ViewBag.PageNumber;
+                for (int j = 1; j <= lenght; j++)
+                {
+                    if (ViewBag.CurrentPage == j)
+                    {
+                        <li class="page-item active"><button class="page-link" formaction="/NhatKy/Index/?Page=@j">@j</button></li>
+                    }
+                    else
+                    {
+                        <li class="page-item"><button class="page-link" formaction="/NhatKy/Index/?Page=@j">@j</button></li>
+                    }
+                }
+            }
+            @if (ViewBag.CurrentPage == ViewBag.PageNumber)
+            {
+                <li class="page-item">
+                    <a class="page-link disabled" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            }
+            else
+            {
+                <li class="page-item">
+                    <button class="page-link" href="/NhatKy/Index/?Page=@(ViewBag.CurrentPage+1)" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </button>
+                </li>
+            }
+
+        </ul>
+    </nav>
+</form>
+
+
+
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+
+            $("tbody tr").click(function () {
+                $(this).addClass("bg-dark bg-opacity-25")
+            })
+            $("tbody tr").dblclick(function () {
+                window.location.href = "/CongNhan/Details/" + $(this).attr("id")
+            })
+
+
+            $("select#maca").val(@ViewBag.MaCa)
+
+
+        })
+    </script>
+}

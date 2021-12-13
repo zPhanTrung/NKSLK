@@ -1,0 +1,196 @@
+﻿@using NKSLK.Models
+@model List<LuongSanPham_CongNhan_View>
+@{
+    ViewBag.Title = "Thống kê";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form method="post" class="d-flex mt-5 flex-column">
+    <div class="card w-100">
+        <div class="card-header">
+            Lựa chọn thống kê
+        </div>
+        <div class="card-body d-flex ">
+            <div class="d-flex col-10 row g-3 m-0">
+                <div class="col-5">
+                    <label class="form-label" for="luachon">Lựa chọn thông kê</label>
+                    <select class="form-select" name="luachon" id="luachon">
+                        <option value=""></option>
+                        <option value="1">Lương sản phẩm của toàn bộ công nhân</option>
+                        <option value="2">Số ngày công đi làm trong tháng</option>
+                        <option value="3">Thông tin lương sản phẩm của công nhân</option>
+                        <option value="4">Công nhân có số làm vượt giờ chuẩn</option>
+                    </select>
+                </div>
+                <div id="children">
+                    <div class="col-5 visually-hidden" id="1">
+                        <label class="form-label" for="ngaythuchien">Ngày thực hiện</label>
+                        <div class="d-flex gap-2">
+                            <input class="form-control" type="date" name="ngaybatdau-search-1" value="@ViewBag.NgayBatDau_1" />
+                            <input class="form-control" type="date" name="ngayketthuc-search-1" value="@ViewBag.NgayKetthuc_1" />
+                        </div>
+                    </div>
+                    <div class="col-5 visually-hidden" id="2">
+                        <div class="d-flex gap-3">
+                            <div class="col-4">
+                                <label class="form-label" for="macn">Mã công nhân</label>
+                                <input class="form-control" name="macn-search" value="@ViewBag.MaCN" />
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label" for="macn">Mã ngày thực hiện</label>
+                                <div class="d-flex gap-2">
+                                    <input class="form-control" type="date" name="ngaybatdau-search-2" value="@ViewBag.NgayBatDau_2" />
+                                    <input class="form-control" type="date" name="ngayketthuc-search-2" value="@ViewBag.NgayKetthuc_2" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-4 visually-hidden" id="3">
+                        <label class="form-label" for="luachon-3">Lựa chọn</label>
+                        <select class="form-select" name="luachon-3">
+                            <option value="1">Lương cao nhất</option>
+                            <option value="2">Lương thấp nhất</option>
+                        </select>
+                    </div>
+                    <div class="col-5 visually-hidden" id="4">
+                        <label class="form-label" for="ngaythuchien">Ngày thực hiện</label>
+                        <div class="d-flex gap-2">
+                            <input class="form-control" type="date" name="ngaybatdau-search-4" value="@ViewBag.NgayBatDau_4" />
+                            <input class="form-control" type="date" name="ngayketthuc-search-4" value="@ViewBag.NgayKetthuc_4" />
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-2 justify-content-center">
+                <button class="btn btn-secondary d-flex" id="btn-timkiem">
+                    <div>Hiển thị</div>
+                    <span class="material-icons align-self-center ms-2">
+                        search
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+</form>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Mã công nhân</th>
+            <th scope="col">Họ tên</th>
+            <th scope="col">Mã tổ</th>
+            <th scope="col">Lương</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int i = 0;
+            foreach (var item in Model)
+            {
+                i++;
+                <tr id=@item.MaCN class="user-select-none">
+                    <td>@i</td>
+                    <td>@item.MaCN</td>
+                    <td>@item.TenCN</td>
+                    <td>@item.MaTo</td>
+                    <td>@item.Luong</td>
+                </tr>
+
+            }
+        }
+    </tbody>
+</table>
+
+@*<nav aria-label="Page navigation example" class="d-flex justify-content-center">
+    <ul class="pagination">
+        @if (ViewBag.CurrentPage == 1)
+        {
+            <li class="page-item">
+                <button class="page-link disabled" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </button>
+            </li>
+        }
+        else
+        {
+            <li class="page-item">
+                <button class="page-link" formaction="/ThongKe/LuongSanPham/?Page=@(ViewBag.CurrentPage-1)" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </button>
+            </li>
+        }
+
+        @{
+            int lenght = ViewBag.PageNumber;
+            for (int j = 1; j <= lenght; j++)
+            {
+                if (ViewBag.CurrentPage == j)
+                {
+                    <li class="page-item active"><button class="page-link" formaction="/ThongKe/LuongSanPham/?Page=@j">@j</button></li>
+                }
+                else
+                {
+                    <li class="page-item"><button class="page-link" formaction="/ThongKe/LuongSanPham/?Page=@j">@j</button></li>
+                }
+            }
+        }
+        @if (ViewBag.CurrentPage == ViewBag.PageNumber)
+        {
+            <li class="page-item">
+                <button class="page-link disabled" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </button>
+            </li>
+        }
+        else
+        {
+            <li class="page-item">
+                <button class="page-link" formaction="/ThongKe/LuongSanPham/?Page=@(ViewBag.CurrentPage+1)" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </button>
+            </li>
+        }
+
+    </ul>
+</nav>*@
+
+
+
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+
+            $("tbody tr").dblclick(function () {
+                window.location.href = "/CongNhan/Details/" + $(this).attr("id")
+            })
+
+
+
+            $("select#luachon").change(function () {
+                $("div#children").children().addClass("visually-hidden")
+                $("div#" + $(this).val()).removeClass("visually-hidden")
+
+                var x = $("select#luachon").val()
+                if (x == 1) {
+                    $("#btn-timkiem").attr("formaction", "/ThongKe/LuongSanPham")
+                }
+                else if (x == 2)
+                    $("#btn-timkiem").attr("formaction", "/ThongKe/NgayCongDiLam")
+
+            })
+
+            $("select#luachon").val(@ViewBag.LuaChon)
+
+            var x = $("select#luachon").val()
+            $("#"+x).removeClass("visually-hidden")
+
+
+        })
+    </script>
+
+}
+
+

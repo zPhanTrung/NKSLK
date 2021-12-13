@@ -1,0 +1,285 @@
+﻿@using NKSLK.Models
+@using NKSLK.Entites
+@model List<NKSLK_View>
+@{
+    ViewBag.Title = "Nhật ký";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3>Nhật ký sản lượng khoán</h3>
+
+<form method="post" class="d-flex mt-4 flex-column">
+    <div class="card w-100 mb-3">
+        <div class="card-header">
+            Tìm kiếm
+        </div>
+        <div class="card-body d-flex ">
+            <div class="d-flex col-10 row g-3 m-0">
+                <div class="col-2">
+                    <label class="form-label" for="macn">Mã công nhân</label>
+                    <input class="form-control" name="macn-search" />
+                </div>
+                <div class="col-2">
+                    <label class="form-label" for="mato">Mã tổ</label>
+                    <input class="form-control" name="mato-search" />
+                </div>
+                <div class="col-2">
+                    <label class="form-label" for="hoten">Họ tên</label>
+                    <input class="form-control" name="hoten-search" />
+                </div>
+                <div class="col-3">
+                    <label class="form-label" for="ngaythuchien">Ngày thực hiện</label>
+                    <input class="form-control" type="date" name="ngaythuchien-search" />
+                </div>
+            </div>
+            <div class="d-flex col-2 justify-content-center">
+                <button class="btn btn-secondary d-flex" formaction="/NhatKy">
+                    <div>Tìm kiếm</div>
+                    <span class="material-icons align-self-center ms-2">
+                        search
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="card w-100 mb-3">
+        <div class="card-header">
+            Điểm danh
+        </div>
+        <div class="card-body d-flex ">
+            <div class="d-flex col-10 row g-3 m-0">
+                <div class="col-2">
+                    <label class="form-label" for="mato">Mã tổ</label>
+                    <input class="form-control" name="mato-diemdanh" id="mato" value="@ViewBag.MaTo" />
+                </div>
+                <div class="col-3">
+                    <label class="form-label" for="ngaythuchien">Ngày thực hiện</label>
+                    <input class="form-control" type="date" name="ngaythuchien-diemdanh" id="ngaythuchien" value="@ViewBag.NgayThucHien" />
+                </div>
+            </div>
+            <div class="d-flex col-2 justify-content-center">
+                <button class="btn btn-secondary d-flex" formaction="/NhatKy/HienThiDiemDanh">
+                    <div>Hiển thị</div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex mt-3 mb-3" >
+        @if (ViewBag.CaLamViec != null)
+        {
+            <label><strong>Ca làm việc: </strong>@ViewBag.CaLamViec</label>
+        }
+    </div>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Mã tổ</th>
+                <th scope="col">Mã công nhân</th>
+                <th scope="col">Họ tên</th>
+                <th scope="col">Ngày sinh</th>
+                <th scope="col">Giới tính</th>
+                <th scope="col">Ngày thực hiện</th>
+                <th scope="col">Giờ bắt đầu</th>
+                <th scope="col">Giờ kết thúc</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int i = 0;
+                foreach (var item in Model)
+                {
+                    i++;
+                    var date = "";
+                    var ngaythuchien = "";
+                    int year;
+                    int month;
+                    int day;
+                    string _month;
+                    string _day;
+                    if (item.NgaySinh.HasValue)
+                    {
+                        year = item.NgaySinh.Value.Year;
+                        month = item.NgaySinh.Value.Month;
+                        day = item.NgaySinh.Value.Day;
+                        _month = month.ToString();
+                        _day = day.ToString();
+                        if (month < 10)
+                        {
+                            _month = "0" + _month;
+                        }
+                        if (day < 10)
+                        {
+                            _day = "0" + _day;
+                        }
+                        date = _day + "/" + _month + "/" + year;
+                    }
+                    if (item.NgayThucHien.HasValue)
+                    {
+                        year = item.NgayThucHien.Value.Year;
+                        month = item.NgayThucHien.Value.Month;
+                        day = item.NgayThucHien.Value.Day;
+                        _month = month.ToString();
+                        _day = day.ToString();
+                        if (month < 10)
+                        {
+                            _month = "0" + _month;
+                        }
+                        if (day < 10)
+                        {
+                            _day = "0" + _day;
+                        }
+                        ngaythuchien = _day + "/" + _month + "/" + year;
+                    }
+
+                    <tr id=@item.MaCN data-mank="@item.MaNK" class="user-select-none">
+                        <td>@i</td>
+                        <td>@item.MaTo</td>
+                        <td>@item.MaCN</td>
+                        <td>@item.HoTen</td>
+                        <td>@date</td>
+                        @{
+                            if (item.GioiTinh == true)
+                            {
+                                <td>Nam</td>
+                            }
+                            else
+                            {
+                                <td>Nữ</td>
+                            }
+                        }
+
+                        <td>@ngaythuchien</td>
+                        <td id="giobatdau">@item.GioBatDau</td>
+                        <td id="gioketthuc">@item.GioKetThuc</td>
+                        <td>
+                            <div class="d-flex justify-content-around" data-id="@item.MaCN">
+                                @if (ViewBag.DuocCheckIn == true && item.GioBatDau == null)
+                                {
+                                    <a class="btn btn-success" id="checkin">CheckIn</a>
+                                    <a class="btn btn-warning visually-hidden" id="checkout">CheckOut</a>
+                                    <span class="text-success visually-hidden">Đã điểm danh</span>
+                                }
+                                else if (ViewBag.DuocCheckOut == true && item.GioBatDau != null && item.GioKetThuc == null) 
+                                {
+                                    <a class="btn btn-success visually-hidden" id="checkin">CheckIn</a>
+                                    <a class="btn btn-warning" id="checkout">CheckOut</a>
+                                    <span class="text-success visually-hidden">Đã điểm danh</span>
+                                }
+                                else if (ViewBag.DuocCheckIn == null && item.GioBatDau == null)
+                                {
+                                    <span class="text-success">Nghỉ</span>
+                                }
+                                else if (ViewBag.DuocCheckOut == null && item.GioBatDau != null && item.GioKetThuc != null)
+                                {
+                                    <span class="text-success">Đã điểm danh</span>
+                                }
+
+                            </div>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+
+    <nav aria-label="Page navigation example" class="d-flex justify-content-center">
+        <ul class="pagination">
+            @if (ViewBag.CurrentPage == 1)
+            {
+                <li class="page-item">
+                    <a class="page-link disabled" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+            }
+            else
+            {
+                <li class="page-item">
+                    <a class="page-link" href="/NhatKy/Index/?Page=@(ViewBag.CurrentPage-1)" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+            }
+
+            @{
+                int lenght = ViewBag.PageNumber;
+                for (int j = 1; j <= lenght; j++)
+                {
+                    if (ViewBag.CurrentPage == j)
+                    {
+                        <li class="page-item active"><a class="page-link" href="/NhatKy/Index/?Page=@j">@j</a></li>
+                    }
+                    else
+                    {
+                        <li class="page-item"><a class="page-link" href="/NhatKy/Index/?Page=@j">@j</a></li>
+                    }
+                }
+            }
+            @if (ViewBag.CurrentPage == ViewBag.PageNumber)
+            {
+                <li class="page-item">
+                    <a class="page-link disabled" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            }
+            else
+            {
+                <li class="page-item">
+                    <a class="page-link" href="/NhatKy/Index/?Page=@(ViewBag.CurrentPage+1)" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            }
+
+        </ul>
+    </nav>
+</form>
+
+
+
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+
+
+            $("a#checkin").click(function () {
+                var date = new Date()
+                var mank = $(this).parent().parent().parent().attr("data-mank")
+                var giobatdau = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds()
+                var td_giobatdau = $(this).parent().parent().parent().children("td#giobatdau")
+                var _this = $(this)
+                var checkout_btn = $(this).next()
+                $.post("/NhatKy/CheckIn", { id: mank, giobatdau: giobatdau }, function (result) {
+                    const obj = JSON.parse(result)
+                    
+                    td_giobatdau.text(obj)
+                    _this.addClass("visually-hidden")
+                    checkout_btn.removeClass("visually-hidden")
+                })
+            });
+
+
+            $("a#checkout").click(function () {
+                var date = new Date()
+                var mank = $(this).parent().parent().parent().attr("data-mank")
+                var gioketthuc = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds()
+                var td_gioketthuc = $(this).parent().parent().parent().children("#gioketthuc")
+                var _this = $(this)
+                $.post("/NhatKy/CheckOut", { id: mank, gioketthuc: gioketthuc }, function (result) {
+                    const obj = JSON.parse(result)
+                    td_gioketthuc.text(obj)
+                    _this.addClass("visually-hidden")
+                    _this.next().removeClass("visually-hidden")
+                })
+            });
+
+        })
+    </script>
+}
+

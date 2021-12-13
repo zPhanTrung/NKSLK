@@ -1,0 +1,355 @@
+﻿@using NKSLK.Models
+@model List<CongViecDaLam_View>
+@{
+    ViewBag.Title = "Công việc đã làm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form method="post" class="d-flex mt-5 flex-column">
+    <div class="d-flex">
+        <div class="col-10 d-flex flex-column mb-3">
+            <div class="card w-100 mb-3" id="congviec-detail">
+                <div class="card-header">
+                    Công việc
+                </div>
+                <div class="card-body d-flex ">
+                    <div class="d-flex row g-3 m-0">
+                        <div class="col-2">
+                            <label class="form-label" for="macv">Mã công việc</label>
+                            <input class="form-control" name="macv" id="macv" />
+                        </div>
+                        <div class="col-4">
+                            <label class="form-label" for="tencv">Tên công việc</label>
+                            <input class="form-control" disabled name="tencv" id="tencv" />
+                        </div>
+                        <div class="col-2">
+                            <label class="form-label" for="dinhmuckhoan">Định mức khoán</label>
+                            <input class="form-control" disabled name="dinhmuckhoan" id="dinhmuckhoan" />
+                        </div>
+                        <div class="col-2">
+                            <label class="form-label" for="donvikhoan">Đơn vị khoán</label>
+                            <input class="form-control" disabled name="donvikhoan" id="donvikhoan" />
+                        </div>
+                        <div class="col-2">
+                            <label class="form-label" for="hesokhoan">Hệ số khoán</label>
+                            <input class="form-control" disabled name="hesokhoan" id="hesokhoan" />
+                        </div>
+                        <div class="col-3">
+                            <label class="form-label" for="dinhmuclaodong">Định mức lao động</label>
+                            <input class="form-control" disabled name="dinhmuclaodong" id="dinhmuclaodong" />
+                        </div>
+                        <div class="col-2">
+                            <label class="form-label" for="dongia">Đơn giá</label>
+                            <input class="form-control" disabled name="dongia" id="dongia" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card w-100" id="sanpham-detail">
+                <div class="card-header">
+                    Sản phẩm
+                </div>
+                <div class="card-body d-flex ">
+                    <div class="d-flex col-10 row g-3 m-0">
+                        <div class="col-2">
+                            <label class="form-label" for="masp">Mã sản phẩm</label>
+                            <input class="form-control" name="masp" id="masp" />
+                        </div>
+                        <div class="col-4">
+                            <label class="form-label" for="tensp">Tên sản phẩm</label>
+                            <input class="form-control" disabled id="tensp" />
+                        </div>
+                        <div class="col-2">
+                            <label class="form-label" for="sodangky">Số đăng ký</label>
+                            <input class="form-control" disabled id="sodangky" />
+                        </div>
+                        <div class="col-3">
+                            <label class="form-label" for="ngaydangky">Ngày đăng ký</label>
+                            <input class="form-control" disabled type="date" id="ngaydangky" />
+                        </div>
+                        <div class="col-3">
+                            <label class="form-label" for="hansudung">Hạn sử dụng</label>
+                            <input class="form-control" disabled id="hansudung" />
+                        </div>
+                        <div class="col-3">
+                            <label class="form-label" for="quycach">Quy cách</label>
+                            <input class="form-control" disabled id="quycach" />
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <label class="form-label" for="hinhanh">Hình ảnh</label>
+                        <img class="form-control p-0 h-75" id="hinhanh"/>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex m-0 mt-2">
+                <div class="col-3">
+                    <label class="form-label" for="sanluong">Sản lượng</label>
+                    <input class="form-control" name="sanluong" id="sanluong" />
+                </div>
+                <div class="col-3">
+                    <label class="form-label" for="solo">Số lô</label>
+                    <input class="form-control" name="solo" id="solo" />
+                </div>
+            </div>
+        </div>
+        <div class="col-2 justify-content-center" id="create">
+            <button class="btn btn-primary d-flex" formaction="/CongViecDaLam/Create/@ViewBag.MaChiTietCaLam">
+                <div>Thêm</div>
+            </button>
+        </div>
+        <div class="col-2 justify-content-center flex-column visually-hidden" id="edit">
+            <button class="btn btn-success d-flex mb-3" id="btn-edit">
+                <div>Sửa</div>
+            </button>
+            <button class="btn btn-danger d-flex" id="cancle">
+                <div>Hủy</div>
+            </button>
+        </div>
+    </div>
+   
+    <div class="d-flex gap-3">
+        @{ 
+            var date = "";
+            if (ViewBag.NgayThucHien != null)
+            {
+                var year = ViewBag.NgayThucHien.Year;
+                var month = ViewBag.NgayThucHien.Month;
+                var day = ViewBag.NgayThucHien.Day;
+                var _month = month.ToString();
+                var _day = day.ToString();
+                if(month<10)
+                {
+                    _month = "0" + _month;
+                }
+                if(day<10)
+                {
+                    _day = "0" + _day;
+                }
+                date = _day + "/" + _month + "/" + year;
+            }
+        }
+        <label><strong>Mã tổ: </strong>@ViewBag.MaTo</label>
+        <label><strong>Ngày thực hiện: </strong>@date</label>
+        <label><strong>Ca làm viêc: </strong>@ViewBag.TenCa</label>
+    </div>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Tên công việc</th>
+                <th scope="col">Mã sản phẩm</th>
+                <th scope="col">Tên sản phẩm</th>
+                <th scope="col">Sản lượng</th>
+                <th scope="col">Số lô</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int i = 0;
+                foreach (var item in Model)
+                {
+                    i++;
+                    <tr id=@item.MaCVDaLam class="user-select-none">
+                        <td>@i</td>
+                        <td>@item.TenCV</td>
+                        <td>@item.MaSP</td>
+                        <td>@item.TenSP</td>
+                        <td id="sanluong">@item.SanLuong</td>
+                        <td id="solo">@item.SoLo</td>
+                        <td>
+                            <div class="d-flex justify-content-around">
+                                <button class="btn p-0 d-flex" onclick="return false" id="btn-delete" data-bs-toggle="modal" data-bs-target="#delete">
+                                    <span class="material-icons align-self-center text-danger">
+                                        delete
+                                    </span>
+                                </button>
+                            </div>
+
+                        </td>
+                    </tr>
+
+                }
+            }
+        </tbody>
+    </table>
+
+</form>
+
+
+<div class="modal fade" id="delete" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Xóa công việc đã làm</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <label class="form-label" for="tencv">Tên công việc</label>
+                    <input class="form-control" disabled id="tencv" value="" />
+                </div>
+                <div>
+                    <label class="form-label" for="masp">Mã sản phẩm</label>
+                    <input class="form-control" disabled id="masp" value="" />
+                </div>
+                <div>
+                    <label class="form-label" for="tensp">Tên sản phẩm</label>
+                    <input class="form-control" disabled id="tensp" value="" />
+                </div>
+                <div>
+                    <label class="form-label" for="sanluong">Sản lượng</label>
+                    <input class="form-control" disabled id="sanluong" />
+                </div>
+                <div>
+                    <label class="form-label" for="solo">Số lô</label>
+                    <input class="form-control" disabled id="solo" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <form method="post">
+                    <button class="btn btn-primary" id="delete-confirm">Xóa</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+
+            $("tbody tr").click(function () {
+                var id = $(this).attr("id")
+                $.post("/CongViecDaLam/Details/" + id, function (result) {
+                    const obj = JSON.parse(result)
+                    const cv = obj[0]
+                    const sp = obj[1]
+                    var cv_input_list = $("#congviec-detail input").toArray()
+                    var sp_input_list = $("#sanpham-detail input").toArray()
+                    Object.keys(cv).forEach(function (item1) {
+                        cv_input_list.forEach(function (item2) {
+                            if ($(item2).attr("id") == item1.toLowerCase()) {
+                                $(item2).val(cv[item1])
+                                return
+                            }
+                        })
+                    })
+                    Object.keys(sp).forEach(function (item1) {
+                        sp_input_list.forEach(function (item2) {
+                            if ($(item2).attr("id") == item1.toLowerCase()) {
+                                if ($(item2).attr("id") == "ngaydangky") {
+                                    var ngaydangky = sp[item1].substring(0, 10)
+                                    $(item2).val(ngaydangky)
+                                }
+                                else
+                                    $(item2).val(sp[item1])
+                                return
+                            }
+                        })
+                    })
+
+                    if (sp.Anh != null) {
+                        var url = sp.Anh.substring(2)
+                        $("#sanpham-detail img").attr("src", "https://localhost:44333/" + url)
+                    }
+                    else {
+                        $("#sanpham-detail img").removeAttr("src")
+                    }
+
+
+                })
+
+                var sanluong = $(this).children("#sanluong").text()
+                var solo = $(this).children("#solo").text()
+                $("#sanluong").val(sanluong)
+                $("#solo").val(solo)
+
+                //show-hidden button
+                $("div#create").addClass("visually-hidden")
+                $("div#edit").removeClass("visually-hidden")
+                $("#cancle").click(function () {
+                    $("div#edit").addClass("visually-hidden")
+                    $("div#create").removeClass("visually-hidden")
+                })
+
+                //add formaction btn-edit
+                $("button#btn-edit").attr("formaction", "/CongViecDaLam/Edit/" + id)
+
+            });
+
+
+            $("#macv").change(function () {
+                var macv = $("#macv").val()
+                $.post("/CongViec/GetCongViec", { id: macv }, function (result) {
+                    const obj = JSON.parse(result)
+                    var input_list = $("#congviec-detail input").toArray()
+
+                    Object.keys(obj).forEach(function (item1) {
+                        input_list.forEach(function (item2) {
+                            if ($(item2).attr("id") == item1.toLowerCase()) {
+                                $(item2).val(obj[item1])
+                                return
+                            }
+                        })
+                    })
+                })
+            });
+
+            $("#masp").change(function () {
+                var masp = $("#masp").val()
+                $.post("/SanPham/GetSanPham", { id: masp }, function (result) {
+                    const obj = JSON.parse(result)
+                    var input_list = $("#sanpham-detail input").toArray()
+
+                    Object.keys(obj).forEach(function (item1) {
+                        input_list.forEach(function (item2) {
+                            if ($(item2).attr("id") == item1.toLowerCase()) {
+                                if ($(item2).attr("id") == "ngaydangky") {
+                                    var ngaydangky = obj[item1].substring(0, 10)
+                                    $(item2).val(ngaydangky)
+                                }
+                                else
+                                    $(item2).val(obj[item1])
+                                return
+                            }
+                        })
+                    })
+
+                    if (obj.Anh != null) {
+                        var url = obj.Anh.substring(2)
+                        $("#sanpham-detail img").attr("src", "https://localhost:44333/" + url)
+                    }
+                    else {
+                        $("#sanpham-detail img").removeAttr("src")
+                    }
+                })
+            });
+
+            $("button#btn-delete").click(function () {
+                var td_list = $(this).parent().parent().parent().children("td")
+                var input_list = $("div#delete input")
+                var lenght = td_list.length
+                for (var i = 1; i < lenght - 1; i++) {
+                    if ($(input_list[i - 1]).attr("type") == "date") {
+                        const str = $(td_list[i]).text().split("/")
+                        $(input_list[i - 1]).val(str[2] + "-" + str[1] + "-" + str[0])
+                    }
+                    else
+                        $(input_list[i - 1]).val($(td_list[i]).text())
+                }
+                var id = $(this).parent().parent().parent().attr("id")
+                $("button#delete-confirm").attr("formaction", "/CongViecDaLam/Delete/" + id + "?mactCaLam=" + @ViewBag.MaChiTietCaLam)
+            });
+
+            
+
+        })
+    </script>
+
+}

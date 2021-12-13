@@ -1,0 +1,113 @@
+﻿@using NKSLK.Entites
+@model CONGNHAN
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h4>Chi tiết</h4>
+
+<div class="d-flex flex-column ms-5">
+    <label>Mã công nhân: @Model.MaCN</label>
+    @{
+
+        if (Model.HoTen != null)
+        {
+            <label>Họ tên: @Model.HoTen</label>
+        }
+        else
+        {
+            <label>Họ tên: chưa rõ</label>
+        }
+
+        var date = "";
+        if (Model.NgaySinh.HasValue)
+        {
+            var year = Model.NgaySinh.Value.Year;
+            var month = Model.NgaySinh.Value.Month;
+            var day = Model.NgaySinh.Value.Day;
+            var _month = month.ToString();
+            var _day = day.ToString();
+            if (month < 10)
+            {
+                _month = "0" + _month;
+            }
+            if (day < 10)
+            {
+                _day = "0" + _day;
+            }
+            date = _day + "/" + _month + "/" + year;
+        }
+
+        <label>Ngày sinh</label>
+
+        if (Model.GioiTinh == true)
+        {
+            <label>Giới tính: Nam</label>
+        }
+        else
+        {
+            <label>Giới tính: Nữ</label>
+        }
+        if (Model.PhongBan != null)
+        {
+            <label>Phòng ban: @Model.PhongBan</label>
+        }
+        else
+        {
+            <label>Phòng ban: chưa rõ</label>
+        }
+        if (Model.ChucVu != null)
+        {
+            <label>Chức vụ: @Model.ChucVu</label>
+        }
+        else
+        {
+            <label>Chức vụ: chưa rõ</label>
+        }
+        if (Model.LuongBaoHiem != null)
+        {
+            <label>Lương bảo hiểm: @Model.LuongBaoHiem</label>
+        }
+        else
+        {
+            <label>Lương bảo hiểm: chưa rõ</label>
+        }
+        if (Model.LuongHopDong != null)
+        {
+            <label>Lương hợp đồng: @Model.LuongHopDong</label>
+        }
+        else
+        {
+            <label>Lương hợp đồng: chưa rõ</label>
+        }
+        if (Model.DANHSACHCONGNHANs.Count > 0)
+        {
+            <label>Tổ: @Model.DANHSACHCONGNHANs.FirstOrDefault().TOCONGNHAN.MaTo</label>
+        }
+        else
+        {
+            <label>Tổ: không</label>
+        }
+        if (Model.QueQuan != null)
+        {
+            <label>Quê quán: @Model.QueQuan</label>
+        }
+        else
+        {
+            <label>Quê quán: chưa rõ</label>
+        }
+
+    }
+
+    <div class="justify-content-start mt-5">
+        <a class="btn btn-secondary bg-opacity-50 " href="javascript:history.back()">Quay lại</a>
+    </div>
+
+</div>
+
+
+
+
+
+

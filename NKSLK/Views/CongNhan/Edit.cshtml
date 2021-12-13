@@ -1,0 +1,100 @@
+﻿@model NKSLK.Entites.CONGNHAN
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3 class="mb-3">Cập nhật</h3>
+
+<form action="/CongNhan/Edit" method="post">
+
+    <div class="d-flex row g-4 ms-3 me-3 mb-5">
+        <div class="col-3 visually-hidden">
+            <input class="form-control" name="maCN" value="@Model.MaCN" />
+        </div>
+        <div class="col-3">
+            <label class="form-label" for="hoten">Họ tên</label>
+            <input class="form-control" name="hoten" id="hoten" value="@Model.HoTen" />
+        </div>
+        <div class="col-3">
+            @{
+                if (Model.NgaySinh != null)
+                {
+                    var year = Model.NgaySinh.Value.Year;
+                    var month = Model.NgaySinh.Value.Month;
+                    var day = Model.NgaySinh.Value.Day;
+                    var s_year = year.ToString();
+                    var s_month = month.ToString();
+                    var s_day = day.ToString();
+                    if (day < 10)
+                    {
+                        s_day = "0" + day;
+                    }
+                    if (month < 10)
+                    {
+                        s_month = "0" + month;
+                    }
+
+                    var date = s_year + "-" + s_month + "-" + s_day;
+                    <label class="form-label" for="ngaysinh">Ngày sinh</label>
+                    <input class="form-control" type="date" name="ngaysinh" id="ngaysinh" value="@date" />
+                }
+                else
+                {
+                    <label class="form-label" for="ngaysinh">Ngày sinh</label>
+                    <input class="form-control" type="date" name="ngaysinh" id="ngaysinh" value="" />
+                }
+            }
+
+        </div>
+        <div class="col-3">
+
+            <label class="form-label" for="gioitinh">Giới tính</label>
+            <select class="form-control" name="gioitinh" id="gioitinh">
+                @{
+                    if (Model.GioiTinh == false)
+                    {
+                        <option value="true">Nam</option>
+                        <option value="false" selected>Nữ</option>
+                    }
+                    else
+                    {
+                        <option value="true" selected>Nam</option>
+                        <option value="false">Nữ</option>
+                    }
+                }
+            </select>
+
+        </div>
+        <div class="col-3">
+            <label class="form-label" for="phongban">Phòng Ban</label>
+            <input class="form-control" name="phongban" id="phongban" value="@Model.PhongBan" />
+        </div>
+        <div class="col-3">
+            <label class="form-label" for="chucvu">Chức vụ</label>
+            <input class="form-control" name="chucvu" id="chucvu" value="@Model.ChucVu" />
+        </div>
+        <div class="col-3">
+            <label class="form-label" for="quequan">Quê quán</label>
+            <input class="form-control" name="quequan" id="quequan" value="@Model.QueQuan" />
+        </div>
+        <div class="col-3">
+            <label class="form-label" for="luonghopdong">Lương hợp đồng</label>
+            <input class="form-control" name="luonghopdong" id="luonghopdong" value="@Model.LuongHopDong" />
+        </div>
+        <div class="col-3">
+            <label class="form-label" for="luongbaohiem">Lương bảo hiểm</label>
+            <input class="form-control" name="luongbaohiem" id="luongbaohiem" value="@Model.LuongBaoHiem" />
+        </div>
+
+    </div>
+
+
+    <div>
+        <a class="btn btn-secondary bg-opacity-50 ms-4" href="javascript:history.back()">Quay lại</a>
+        <button class="btn btn-primary ms-4">Lưu</button>
+    </div>
+</form>
+
+

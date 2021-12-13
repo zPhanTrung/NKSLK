@@ -1,0 +1,190 @@
+﻿@using NKSLK.Entites
+@model List<CALAMVIEC>
+@{
+    ViewBag.Title = "Ca làm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form method="post" action="/CongNhan/Search" class="d-flex mt-5 flex-column">
+  
+    <div class="ms-4">
+        <button class="btn btn-primary d-flex mb-4 mt-3" onclick="return false" data-bs-toggle="modal" data-bs-target="#create">
+            <div>Thêm ca làm</div>
+            <span class="material-icons align-self-center ms-2">
+                add_circle_outline
+            </span>
+        </button>
+    </div>
+
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Tên ca</th>
+                <th scope="col">Giờ bắt đầu</th>
+                <th scope="col">Giờ kết thúc</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int i = 0;
+                foreach (var item in Model)
+                {
+                    i++;
+                    <tr id="@item.MaCa" class="user-select-none">
+                        <td>@i</td>
+                        <td>@item.TenCa</td>
+                        <td>@item.GioBatDau</td>
+                        <td>@item.GioKetThuc</td>
+                        <td>
+                            <div class="d-flex justify-content-around">
+                                <button class="btn p-0 d-flex" onclick="return false" id="btn-edit" data-bs-toggle="modal" data-bs-target="#edit">
+                                    <span class="material-icons align-self-center">
+                                        edit
+                                    </span>
+                                </button>
+                                <button class="btn p-0 d-flex" onclick="return false" id="btn-delete" data-bs-toggle="modal" data-bs-target="#delete">
+                                    <span class="material-icons align-self-center text-danger">
+                                        delete
+                                    </span>
+                                </button>
+                            </div>
+
+                        </td>
+                    </tr>
+
+                }
+            }
+        </tbody>
+    </table>
+</form>
+
+<form method="post" class="d-flex">
+    <div class="modal fade" id="create" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Thêm ca làm</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <label class="form-label" for="tenca">Tên ca</label>
+                        <input class="form-control" name="tenca" />
+                    </div>
+                    <div>
+                        <label class="form-label" for="giobatdau">Giờ bắt đầu</label>
+                        <input class="form-control" type="time" name="giobatdau" />
+                    </div>
+                    <div>
+                        <label class="form-label" for="gioketthuc">Giờ kết thúc</label>
+                        <input class="form-control" type="time" name="gioketthuc" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button class="btn btn-primary" formaction="/CaLamViec/Create">Thêm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<form method="post" class="d-flex">
+    <div class="modal fade" id="edit" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Sửa ca làm</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <label class="form-label" for="tenca">Tên ca</label>
+                        <input class="form-control" name="tenca" />
+                    </div>
+                    <div>
+                        <label class="form-label" for="giobatdau">Giờ bắt đầu</label>
+                        <input class="form-control" type="time" name="giobatdau" />
+                    </div>
+                    <div>
+                        <label class="form-label" for="gioketthuc">Giờ kết thúc</label>
+                        <input class="form-control" type="time" name="gioketthuc" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button class="btn btn-primary" id="edit-confirm" formaction="">Lưu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+<div class="modal fade" id="delete" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Xóa ca làm</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <label class="form-label" for="tenca">Tên ca</label>
+                    <input class="form-control" disabled id="tenca" value="" />
+                </div>
+                <div>
+                    <label class="form-label" for="giobatdau">Giờ bắt đầu</label>
+                    <input class="form-control" disabled id="giobatdau" value="" />
+                </div>
+                <div>
+                    <label class="form-label" for="gioketthuc">Giờ kết thúc</label>
+                    <input class="form-control" disabled id="gioketthuc" value="" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <form method="post">
+                    <button class="btn btn-primary" formaction="" id="delete-confirm">Xóa</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+
+            $("button#btn-delete").click(function () {
+                var td_list = $(this).parent().parent().parent().children("td")
+                var input_list = $("div#delete input")
+                var lenght = td_list.length
+                for (var i = 1; i < lenght - 1; i++) {
+                    $(input_list[i - 1]).val($(td_list[i]).text())  
+                }
+                var id = $(this).parent().parent().parent().attr("id")
+                $("button#delete-confirm").attr("formaction", "/CaLamViec/Delete/" + id)
+            })
+
+            $("button#btn-edit").click(function () {
+                var td_list = $(this).parent().parent().parent().children("td")
+                var input_list = $("div#edit input")
+                var lenght = td_list.length
+                for (var i = 1; i < lenght - 1; i++) {
+                    $(input_list[i - 1]).val($(td_list[i]).text())
+                }
+                var id = $(this).parent().parent().parent().attr("id")
+                $("button#edit-confirm").attr("formaction", "/CaLamViec/Edit/?maca=" + id)
+            })
+        })
+    </script>
+
+}
+
+
