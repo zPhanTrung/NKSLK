@@ -39,10 +39,7 @@ namespace NKSLK.Entites
 
         public decimal? LuongBaoHiem { get; set; }
 
-        [StringLength(50)]
-        public string TaiKhoan { get; set; }
 
-        public virtual TAIKHOAN TAIKHOAN1 { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DANHSACHCONGNHAN> DANHSACHCONGNHANs { get; set; }

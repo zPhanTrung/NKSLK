@@ -33,10 +33,6 @@ namespace NKSLK.Entites
                 .Property(e => e.LuongBaoHiem)
                 .HasPrecision(8, 0);
 
-            modelBuilder.Entity<CONGNHAN>()
-                .Property(e => e.TaiKhoan)
-                .IsUnicode(false);
-
             modelBuilder.Entity<CONGVIEC>()
                 .Property(e => e.DinhMucKhoan)
                 .HasPrecision(4, 2);
@@ -85,10 +81,7 @@ namespace NKSLK.Entites
                 .Property(e => e.VaiTro)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<TAIKHOAN>()
-                .HasMany(e => e.CONGNHANs)
-                .WithOptional(e => e.TAIKHOAN1)
-                .HasForeignKey(e => e.TaiKhoan);
+
         }
     }
 }

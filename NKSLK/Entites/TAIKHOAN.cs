@@ -10,10 +10,6 @@ namespace NKSLK.Entites
     public partial class TAIKHOAN
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public TAIKHOAN()
-        {
-            CONGNHANs = new HashSet<CONGNHAN>();
-        }
 
         [Key]
         [Column("TaiKhoan")]
@@ -26,7 +22,6 @@ namespace NKSLK.Entites
         [StringLength(20)]
         public string VaiTro { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CONGNHAN> CONGNHANs { get; set; }
-    }
+
+    } 
 }
