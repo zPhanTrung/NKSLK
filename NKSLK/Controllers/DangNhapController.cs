@@ -14,6 +14,10 @@ namespace NKSLK.Controllers
         {
             return View("Login");
         }
+        public ActionResult Login()
+        {
+            return View("Login");
+        }
 
         public ActionResult CheckLogin(string username, string password)
         {
@@ -21,7 +25,7 @@ namespace NKSLK.Controllers
             var rs = db.TAIKHOANs.Find(username);
             if (rs != null)
                 if (rs.MatKhau == password)
-                    return RedirectPermanent("/Home/Index");
+                    return RedirectPermanent("/CongNhan");
             return View("Login");
         }
     }

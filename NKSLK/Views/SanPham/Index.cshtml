@@ -1,0 +1,333 @@
+﻿@using NKSLK.Entites
+@model List<SANPHAM>
+@{
+    ViewBag.Title = "Sản phẩm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form method="post" action="/SanPham" class="d-flex mt-5 flex-column">
+    <div class="card w-100">
+        <div class="card-header">
+            Tìm kiếm
+        </div>
+        <div class="card-body d-flex ">
+            <div class="d-flex col-10 row g-3 m-0">
+                <div class="col-5">
+                    <label class="form-label" for="maCN">Ngày đăng ký</label>
+                    <input class="form-control" type="date" name="ngaydangky-search" value="@ViewBag.NgayDangKy" />
+                </div>
+            </div>
+            <div class="col-2 justify-content-center">
+                <button class="btn btn-secondary d-flex">
+                    <div>Tìm kiếm</div>
+                    <span class="material-icons align-self-center ms-2">
+                        search
+                    </span>
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="d-flex">
+        <button class="btn btn-primary d-flex mb-4 mt-3" onclick="return false" data-bs-toggle="modal" data-bs-target="#create">
+            <div>Thêm sản phẩm</div>
+            <span class="material-icons align-self-center ms-2">
+                add_circle_outline
+            </span>
+        </button>
+    </div>
+
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Mã sản phẩm</th>
+                <th scope="col">Tên sản phẩm</th>
+                <th scope="col">Số đăng ký</th>
+                <th scope="col">Ngày đăng ký</th>
+                <th scope="col">Hạn sử dụng</th>
+                <th scope="col">Quy cách</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int i = 0;
+                foreach (var item in Model)
+                {
+                    i++;
+                    var date = "";
+                    if (item.NgayDangKy.HasValue)
+                    {
+                        var year = item.NgayDangKy.Value.Year;
+                        var month = item.NgayDangKy.Value.Month;
+                        var day = item.NgayDangKy.Value.Day;
+                        var _month = month.ToString();
+                        var _day = day.ToString();
+                        if (month < 10)
+                        {
+                            _month = "0" + _month;
+                        }
+                        if (day < 10)
+                        {
+                            _day = "0" + _day;
+                        }
+                        date = _day + "/" + _month + "/" + year;
+                    }
+                    <tr id=@item.MaSP class="user-select-none">
+                        <td>@i</td>
+                        <td>@item.MaSP</td>
+                        <td>@item.TenSP</td>
+                        <td>@item.SoDangKy</td>
+                        <td>@date</td>
+                        <td>@item.HanSuDung</td>
+                        <td>@item.QuyCach</td>
+                        <td>
+                            <div class="d-flex justify-content-around">
+                                <button class="btn p-0 d-flex" onclick="return false" id="btn-edit" data-bs-toggle="modal" data-bs-target="#edit">
+                                    <span class="material-icons align-self-center text-success">
+                                        edit
+                                    </span>
+                                </button>
+                                <button class="btn p-0 d-flex" onclick="return false" id="btn-delete" data-bs-toggle="modal" data-bs-target="#delete">
+                                    <span class="material-icons align-self-center text-danger">
+                                        delete
+                                    </span>
+                                </button>
+                            </div>
+
+                        </td>
+                    </tr>
+
+                }
+            }
+        </tbody>
+    </table>
+
+    <nav aria-label="Page navigation example" class="d-flex justify-content-center">
+        <ul class="pagination">
+            @if (ViewBag.CurrentPage == 1)
+            {
+                <li class="page-item">
+                    <button class="page-link disabled" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </button>
+                </li>
+            }
+            else
+            {
+                <li class="page-item">
+                    <button class="page-link" formaction="/SanPham/Index/?Page=@(ViewBag.CurrentPage-1)" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </button>
+                </li>
+            }
+
+            @{
+                int lenght = ViewBag.PageNumber;
+                for (int j = 1; j <= lenght; j++)
+                {
+                    if (ViewBag.CurrentPage == j)
+                    {
+                        <li class="page-item active"><button class="page-link" formaction="/SanPham/Index/?Page=@j">@j</button></li>
+                    }
+                    else
+                    {
+                        <li class="page-item"><button class="page-link" formaction="/SanPham/Index/?Page=@j">@j</button></li>
+                    }
+                }
+            }
+            @if (ViewBag.CurrentPage == ViewBag.PageNumber)
+            {
+                <li class="page-item">
+                    <button class="page-link disabled" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </button>
+                </li>
+            }
+            else
+            {
+                <li class="page-item">
+                    <button class="page-link" formaction="/SanPham/Index/?Page=@(ViewBag.CurrentPage+1)" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </button>
+                </li>
+            }
+
+        </ul>
+    </nav>
+
+</form>
+
+
+<div class="modal fade" id="delete" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Xóa sản phẩm</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <label class="form-label" for="masp">Mã sản phẩm</label>
+                    <input class="form-control" disabled id="masp" value="" />
+                </div>
+                <div>
+                    <label class="form-label" for="tencv">Tên sản phẩm</label>
+                    <input class="form-control" disabled id="tencv" value="" />
+                </div>
+                <div>
+                    <label class="form-label" for="sodangky">Số đăng ký</label>
+                    <input class="form-control" disabled id="sodangky" value="" />
+                </div>
+                <div>
+                    <label class="form-label" for="ngaydangky">Ngày đăng ký</label>
+                    <input class="form-control" disabled id="ngaydangky" value="" />
+                </div>
+                <div>
+                    <label class="form-label" for="hansudung">Hạn sử dụng</label>
+                    <input class="form-control" disabled id="hansudung" value="" />
+                </div>
+                <div>
+                    <label class="form-label" for="quycach">Quy cách</label>
+                    <input class="form-control" disabled id="quycach" value="" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <form method="post">
+                    <button class="btn btn-primary" formaction="" id="delete-confirm">Xóa</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<form method="post">
+    <div class="modal fade" id="create" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Thêm sản phẩm</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <label class="form-label" for="masp">Mã sản phẩm</label>
+                        <input class="form-control" name="masp" id="masp" value="" />
+                    </div>
+                    <div>
+                        <label class="form-label" for="tensp">Tên sản phẩm</label>
+                        <input class="form-control" name="tensp" id="tensp" value="" />
+                    </div>
+                    <div>
+                        <label class="form-label" for="sodangky">Số đăng ký</label>
+                        <input class="form-control" name="sodangky" id="sodangky" value="" />
+                    </div>
+                    <div>
+                        <label class="form-label" for="ngaydangky">Ngày đăng ký</label>
+                        <input class="form-control" type="date" name="ngaydangky" id="ngaydangky" value="" />
+                    </div>
+                    <div>
+                        <label class="form-label" for="hansudung">Hạn sử dụng</label>
+                        <input class="form-control" name="hansudung" id="hansudung" value="" />
+                    </div>
+                    <div>
+                        <label class="form-label" for="quycach">Quy cách</label>
+                        <input class="form-control" name="quycach" id="quycach" value="" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button class="btn btn-primary" formaction="/SanPham/Create">Thêm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<form method="post">
+    <div class="modal fade" id="edit" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Sửa sản phẩm</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <label class="form-label" for="masp">Mã sản phẩm</label>
+                        <input class="form-control" name="masp" id="masp" value="" />
+                    </div>
+                    <div>
+                        <label class="form-label" for="tencv">Tên sản phẩm</label>
+                        <input class="form-control" name="tensp" id="tensp" value="" />
+                    </div>
+                    <div>
+                        <label class="form-label" for="sodangky">Số đăng ký</label>
+                        <input class="form-control" name="sodangky" id="sodangky" value="" />
+                    </div>
+                    <div>
+                        <label class="form-label" for="ngaydangky">Ngày đăng ký</label>
+                        <input class="form-control" type="date" name="ngaydangky" id="ngaydangky" value="" />
+                    </div>
+                    <div>
+                        <label class="form-label" for="hansudung">Hạn sử dụng</label>
+                        <input class="form-control" name="hansudung" id="hansudung" value="" />
+                    </div>
+                    <div>
+                        <label class="form-label" for="quycach">Quy cách</label>
+                        <input class="form-control" name="quycach" id="quycach" value="" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button class="btn btn-primary" id="edit-confirm" formaction="/SanPham/Edit">Sửa</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+
+            $("button#btn-delete").click(function () {
+                var td_list = $(this).parent().parent().parent().children("td")
+                var input_list = $("div#delete input")
+                var lenght = td_list.length
+                for (var i = 1; i < lenght - 1; i++) {
+                    if ($(input_list[i - 1]).attr("type") == "date") {
+                        const str = $(td_list[i]).text().split("/")
+                        $(input_list[i - 1]).val(str[2] + "-" + str[1] + "-" + str[0])
+                    }
+                    else
+                        $(input_list[i - 1]).val($(td_list[i]).text())
+                }
+
+                $("button#delete-confirm").attr("formaction", "/SanPham/Delete/" + $(input_list[0]).val())
+            })
+
+            $("button#btn-edit").click(function () {
+                var td_list = $(this).parent().parent().parent().children("td")
+                var input_list = $("div#edit input")
+                var lenght = td_list.length
+                for (var i = 1; i < lenght - 1; i++) {
+                    $(input_list[i - 1]).val($(td_list[i]).text())
+                }
+
+                $("button#edit-confirm").attr("formaction", "/SanPham/Edit/?masp=" + $(input_list[0]).val())
+            })
+
+        })
+    </script>
+
+}
+
+

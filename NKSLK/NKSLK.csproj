@@ -129,7 +129,6 @@
     <Compile Include="Controllers\LichLamViecController.cs" />
     <Compile Include="Controllers\NhatKyController.cs" />
     <Compile Include="Controllers\ToCongNhanController.cs" />
-    <Compile Include="Controllers\TrangChuController.cs" />
     <Compile Include="Controllers\DangNhapController.cs" />
     <Compile Include="Controllers\SanPhamController.cs" />
     <Compile Include="Controllers\CaLamViecController.cs" />
@@ -141,6 +140,7 @@
     <Compile Include="Dao\CongViecDao.cs" />
     <Compile Include="Dao\LichLamViecDao.cs" />
     <Compile Include="Dao\NhatKyDao.cs" />
+    <Compile Include="Dao\SanPhamDao.cs" />
     <Compile Include="Dao\ThongKeDao.cs" />
     <Compile Include="Dao\ToCongNhanDao.cs" />
     <Compile Include="Entites\CALAMVIEC.cs" />
@@ -235,10 +235,10 @@
     <Content Include="Views\CongViec\Index.cshtml" />
     <Content Include="Views\ThongKe\LuongSanPham.cshtml" />
     <Content Include="Views\ThongKe\NgayCongDiLam.cshtml" />
+    <Content Include="Views\SanPham\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\SanPham\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />

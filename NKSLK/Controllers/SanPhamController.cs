@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using NKSLK.Dao;
 using NKSLK.Entites;
 
 namespace NKSLK.Controllers
@@ -15,102 +16,62 @@ namespace NKSLK.Controllers
         private QLNC db = new QLNC();
 
         // GET: SANPHAMs
-        public ActionResult Index()
+        public ActionResult Index(FormCollection collection, int Page = 1)
         {
-            return View(db.SANPHAMs.ToList());
+            ViewBag.NgayDangKy = collection["ngaydangky-search"];
+
+            var rs = SanPhamDao.Search(collection, db);
+            int lenght = rs.ToList().Count;
+            if (lenght % 10 > 0)
+                ViewBag.PageNumber = lenght / 10 + 1;
+            else
+                ViewBag.PageNumber = lenght / 10;
+            ViewBag.CurrentPage = Page;
+            var model = rs.ToList().Skip((Page - 1) * 10);
+            model = model.Take(10);
+            return View(model.ToList());
         }
 
-        // GET: SANPHAMs/Details/5
-        public ActionResult Details(string id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            SANPHAM sANPHAM = db.SANPHAMs.Find(id);
-            if (sANPHAM == null)
-            {
-                return HttpNotFound();
-            }
-            return View(sANPHAM);
-        }
 
-        // GET: SANPHAMs/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: SANPHAMs/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "MaSP,TenSP,SoDangKy,NgayDangKy,HanSuDung,QuyCach")] SANPHAM sANPHAM)
+        public ActionResult Create([Bind(Include = "MaSP,TenSP,SoDangKy,NgayDangKy,HanSuDung,QuyCach")] SANPHAM sanpham)
         {
             if (ModelState.IsValid)
             {
-                db.SANPHAMs.Add(sANPHAM);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                try
+                {
+                    db.SANPHAMs.Add(sanpham);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                catch{}
             }
 
-            return View(sANPHAM);
+            return Json(new { alert = "fail" }, JsonRequestBehavior.AllowGet);
         }
 
-        // GET: SANPHAMs/Edit/5
-        public ActionResult Edit(string id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            SANPHAM sANPHAM = db.SANPHAMs.Find(id);
-            if (sANPHAM == null)
-            {
-                return HttpNotFound();
-            }
-            return View(sANPHAM);
-        }
-
-        // POST: SANPHAMs/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "MaSP,TenSP,SoDangKy,NgayDangKy,HanSuDung,QuyCach")] SANPHAM sANPHAM)
+        public ActionResult Edit(string masp)
         {
-            if (ModelState.IsValid)
+            var sanpham = db.SANPHAMs.Find(masp);
+            if (TryUpdateModel(sanpham, "",
+                new string[] { "TenSP", "SoDangKy", "NgayDangKy", "HanSuDung", "QuyCach"}))
             {
-                db.Entry(sANPHAM).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                try
+                {
+                    db.SaveChanges();
+                    return RedirectPermanent("/SanPham/Index");
+                }
+                catch { }
             }
-            return View(sANPHAM);
+            return Json(new { alert = "fail" }, JsonRequestBehavior.AllowGet);
         }
 
-        // GET: SANPHAMs/Delete/5
+        [HttpPost]
         public ActionResult Delete(string id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            SANPHAM sANPHAM = db.SANPHAMs.Find(id);
-            if (sANPHAM == null)
-            {
-                return HttpNotFound();
-            }
-            return View(sANPHAM);
-        }
-
-        // POST: SANPHAMs/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(string id)
-        {
-            SANPHAM sANPHAM = db.SANPHAMs.Find(id);
-            db.SANPHAMs.Remove(sANPHAM);
+            SANPHAM sanpham = db.SANPHAMs.Find(id);
+            db.SANPHAMs.Remove(sanpham);
             db.SaveChanges();
             return RedirectToAction("Index");
         }
